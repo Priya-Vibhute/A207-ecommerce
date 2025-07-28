@@ -1,12 +1,14 @@
 package com.learn.ecommerce.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.learn.ecommerce.UserDto;
 import com.learn.ecommerce.entities.User;
+import com.learn.ecommerce.exceptions.UserNotFoundException;
 import com.learn.ecommerce.repositories.UserRepository;
 
 @Service
@@ -25,14 +27,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto updateUser(String id, UserDto userDto) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		User user = userRepository.findById(id)
+		.orElseThrow(()->new UserNotFoundException("User not found"));
+		
+		
+		userDto.setId(id);
+		User savedUser = userRepository.save(dtoToEntity(userDto));
+		
+		
+		return entityToDto(savedUser);
 	}
 
 	@Override
 	public List<UserDto> getAllUsers() {
-		// TODO Auto-generated method stub
-		return null;
+	
+		return userRepository.findAll().stream()
+				.map(u->entityToDto(u)).toList();
 	}
 
 	@Override
@@ -43,14 +54,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUserByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userRepository.findByEmail(email)
+		.orElseThrow(()->new UserNotFoundException("User not found"));
+		return entityToDto(user);
 	}
 
 	@Override
 	public List<UserDto> getUserByFirstName(String firstName) {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findByFirstName(firstName)
+				.stream().map(u->entityToDto(u)).toList();
 	}
 
 	@Override
