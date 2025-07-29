@@ -1,6 +1,7 @@
 package com.learn.ecommerce;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.learn.ecommerce.entities.Address;
 import com.learn.ecommerce.validators.PasswordMatch;
 
 import jakarta.validation.constraints.Max;
@@ -32,6 +33,8 @@ public class UserDto {
 	@Max(70)
 	private int age;
 	private String email;
+	
+	private Address address;
 	
 	
 
